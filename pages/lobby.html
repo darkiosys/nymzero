@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Lobby | Nym Zero</title>
+  </head>
+  <link href="/assets/css/jquery.toast.css" rel="stylesheet">
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+  <style media="screen">
+    .center {
+      margin: auto;
+      width: 100%;
+      height: 100%;
+      padding: 15%;
+    }
+    .nickname {
+      margin: auto;
+      width: 50%;
+      padding: 10px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <hr>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Insert ID Room" aria-label="Recipient's username" aria-describedby="basic-addon2" id="room_id">
+                <div class="input-group-append">
+                  <a class="btn btn-outline-secondary" id="join">Join</a>
+                </div>
+              </div>
+              <table class="table table-striped" id="roomlist">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Room Name</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Max Number</th>
+                    <th scope="col">Bet</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/assets/js/jquery.min.js"></script>
+  <script type="text/javascript">
+    let baseUrl = "http://192.168.43.182:3000"
+    if(!localStorage.getItem("token")){
+        window.location = baseUrl+"/auth";
+    }
+    $.ajax({
+      url: baseUrl+"/api/room",
+      // beforeSend: function(request) {
+      //     request.setRequestHeader("Authorization", authorizationToken);
+      // },
+      cache: false,
+      success: function(data){
+        var content = ""
+        var id = 1
+        for (var i = data.data.length - 1; i >= 0; i--) {
+          content += "<tr>"
+          content += "<td>"+data.data[i].id+"</td>"
+          content += "<td><a>"+data.data[i].room+"</a></td>"
+          content += "<td>"+data.data[i].owner+"</td>"
+          content += "<td>"+data.data[i].max_num+"</td>"
+          content += "<td>"+data.data[i].bet+"</td>"
+          content += "</tr>"
+        }
+        $('#roomlist tbody').html(content)
+      },
+      error: function(){
+        console.log("error")
+      }
+    })
+    $("#join").click(function() {
+      let options = {
+        id: parseInt($('#room_id').val()),
+        status: 1
+      }
+      localStorage.setItem('join_option', JSON.stringify(options))
+      let audio = new Audio('/assets/sounds/click.wav')
+      audio.play()
+      setTimeout(function() {
+        window.location = "/table"
+      }, 2000)
+    })
+  </script>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Table | Nym Zero</title>
+  </head>
+  <link href="/assets/css/jquery.toast.css" rel="stylesheet">
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+  <style media="screen">
+    .center {
+      margin: auto;
+      width: 100%;
+      height: 100%;
+      padding: 15%;
+    }
+    .nickname {
+      margin: auto;
+      width: 50%;
+      padding: 10px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages li { padding: 5px 10px; }
+    #messages li:nth-child(odd) { background: #eee; }
+  </style>
+  <body>
+    <div class="container">
+      <hr>
+      <div class="card">
+        <div class="card-body">
+
+          <div class="row">
+            <div class="col-sm">
+              <h5 class="card-title" id="roomname"></h5>
+              <h6 class="card-subtitle mb-2">Owner Room: <b id="ownerroom"></b></h6>
+              <h6 class="card-subtitle mb-2">Max Number: <b id="t_max"></b></h6>
+            </div>
+            <div class="col-sm">
+              <img id="p1_card0" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p1_card1" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p1_card2" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <input type="hidden" id="p1_card0_val" value="0">
+              <input type="hidden" id="p1_card1_val" value="0">
+              <input type="hidden" id="p1_card2_val" value="0">
+            </div>
+            <div class="col-sm">
+              <center>
+                  <button type="button" id="start" class="btn btn-outline-dark">Start Game</button> <a data-toggle="modal" href="#myModal" class="btn btn-outline-dark">Chat Room</a> <a id="exit" class="btn btn-outline-dark">Exit</a>
+              </center>
+              <hr />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm text-center">
+              <div class="nickname btn btn-outline-dark" id="seat1">
+                sit here
+              </div>
+            </div>
+            <div class="col-sm">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm">
+              <img id="p4_card0" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p4_card1" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p4_card2" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <input type="hidden" id="p4_card0_val" value="0">
+              <input type="hidden" id="p4_card1_val" value="0">
+              <input type="hidden" id="p4_card2_val" value="0">
+            </div>
+            <div class="col-sm text-center">
+              <div class="center btn btn-outline-dark">
+                <h2 id="num">0</h2>
+              </div>
+            </div>
+            <div class="col-sm">
+              <img id="p2_card0" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p2_card1" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p2_card2" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <input type="hidden" id="p2_card0_val" value="0">
+              <input type="hidden" id="p2_card1_val" value="0">
+              <input type="hidden" id="p2_card2_val" value="0">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm text-center">
+              <div class="nickname btn btn-outline-dark" id="seat4">
+                sit here
+              </div>
+            </div>
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm text-center">
+              <div class="nickname btn btn-outline-dark" id="seat2">
+                sit here
+              </div>
+            </div>
+          </div>
+          <div class="row" >
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+              <img id="p3_card0" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p3_card1" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <img id="p3_card2" src="/assets/images/cards/back.png" alt="card" style="width:30%; visibility:hidden;">
+              <input type="hidden" id="p3_card0_val" value="0">
+              <input type="hidden" id="p3_card1_val" value="0">
+              <input type="hidden" id="p3_card2_val" value="0">
+            </div>
+            <div class="col-sm">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm text-center">
+              <div class="nickname btn btn-outline-dark" id="seat3">
+                sit here
+              </div>
+            </div>
+            <div class="col-sm">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="myModal" class="modal fade">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-body">
+                    <h5 class="card-title">Chat area</h5>
+                    <ul id="messages"></ul>
+                    <div class="text-center">
+                      <input id="chat_msg" type="text" style="width:70%;"><a href="#" id="chat" class="btn btn-outline-dark">Chat</a>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/jquery.toast.js"></script>
+  <script src="/assets/js/bootstrap.js"></script>
+  <script type="text/javascript">
+    let baseUrl = "http://192.168.43.182:3000"
+    if(!localStorage.getItem("token")){
+      window.location = baseUrl+"/auth";
+    }
+    const socket = io.connect()
+    if (localStorage.getItem('room_id')) {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+      }
+      socket.emit('rejoin', data)
+    }
+    if (localStorage.getItem('game_option')) {
+      let gameOption = JSON.parse(localStorage.getItem('game_option'))
+      if (gameOption != null) {
+        if (gameOption.create == 1) {
+          let data = {
+            id: Math.floor((Math.random() * 99999) + 99999),
+            room: gameOption.room,
+            token: localStorage.getItem('token'),
+            max_num: gameOption.max,
+            bet: 0,
+          }
+          gameOption.create = 0
+          localStorage.setItem('game_option', null)
+          localStorage.setItem('room_id', data.id)
+          console.log(data.id)
+          socket.emit('room', data)
+        }
+      }
+    }
+    if (localStorage.getItem('join_option')) {
+      let joinOption = JSON.parse(localStorage.getItem('join_option'))
+      if (joinOption != null) {
+        if (joinOption.status == 1) {
+          let data = {
+            id: parseInt(joinOption.id),
+            token: localStorage.getItem('token'),
+          }
+          socket.emit('join', data)
+          joinOption.status = 0
+          localStorage.setItem('join_option', null)
+          localStorage.setItem('room_id', data.id)
+        }
+      }
+    }
+    socket.on('sound', function(sound){
+      if (sound == 'sit') {
+        let audio = new Audio('/assets/sounds/sit.wav')
+        audio.play()
+      }
+      if (sound == 'start') {
+        let audio = new Audio('/assets/sounds/start.wav')
+        audio.play()
+      }
+      if (sound == 'card') {
+        let audio = new Audio('/assets/sounds/card.wav')
+        audio.play()
+      }
+      if (sound == 'chat') {
+        let audio = new Audio('/assets/sounds/chat.wav')
+        audio.play()
+      }
+      if (sound == 'result') {
+        let audio = new Audio('/assets/sounds/result.wav')
+        audio.play()
+      }
+    })
+    socket.on('message', function(json){
+      $("#num").html(json.num)
+      $.toast({
+        heading: 'Information',
+        text: 'Status : '+json.status,
+        position: 'bottom-right',
+        bgColor:'black',
+        textColor: 'white',
+        loader: true,
+        loaderBg: 'white',
+        showHideTransition : 'slide',
+        hideAfter: 3000,
+        stack: 1
+      });
+      if (json.status == "end") {
+        let playerlose = null
+        for (var i = 0; i < json.players.length; i++) {
+          if (json.players[i].name == localStorage.getItem('playername')) {
+            if (json.players[i].status.lose == 0) {
+              let audio = new Audio('/assets/sounds/win.ogg')
+              audio.play()
+            } else {
+              let audio = new Audio('/assets/sounds/lose.ogg')
+              audio.play()
+            }
+          }
+          if (json.players[i].status.lose == 1) {
+            playerlose = json.players[i]
+          }
+        }
+        setTimeout(function() {
+          let data = {
+            id: parseInt(localStorage.getItem('room_id')),
+            token: localStorage.getItem('token')
+          }
+          socket.emit('newround', data)
+        }, 5000)
+        $.toast({
+          heading: 'Result',
+          text: playerlose.name+' Lose',
+          position: 'bottom-right',
+          bgColor:'black',
+          textColor: 'white',
+          loader: true,
+          loaderBg: 'white',
+          showHideTransition : 'slide',
+          hideAfter: 3000,
+          stack: 1
+        });
+      }
+      $("#roomname").html(json.room)
+      $("#ownerroom").html(json.owner)
+      $("#t_max").html(json.max_num)
+      if (json.players.length > 0) {
+        for (var i = 0; i < json.players.length; i++) {
+          if (json.players[i].chair == 1) {
+            $("#seat1").html(json.players[i].name)
+            $("#seat1").html(json.players[i].name)
+            for (var k = 0; k < 3; k++) {
+              $("#p1_card"+k).css('visibility', 'hidden')
+            }
+            for (var j = 0; j < json.players[i].cards.length; j++) {
+              $("#p1_card"+j).css('visibility', 'visible')
+              if (localStorage.getItem('playername') == json.players[i].name) {
+                $("#p1_card"+j).attr('src', json.players[i].cards[j].image);
+              } else {
+                $("#p1_card"+j).attr('src', '/assets/images/cards/back.png');
+              }
+              $("#p1_card"+j+"_val").val(json.players[i].cards[j].id);
+            }
+          }
+          if (json.players[i].chair == 2) {
+            $("#seat2").html(json.players[i].name)
+            $("#seat2").html(json.players[i].name)
+            for (var k = 0; k < 3; k++) {
+              $("#p2_card"+k).css('visibility', 'hidden')
+            }
+            for (var j = 0; j < json.players[i].cards.length; j++) {
+              $("#p2_card"+j).css('visibility', 'visible')
+              if (localStorage.getItem('playername') == json.players[i].name) {
+                $("#p2_card"+j).attr('src', json.players[i].cards[j].image);
+              } else {
+                $("#p2_card"+j).attr('src', '/assets/images/cards/back.png');
+              }
+              $("#p2_card"+j+"_val").val(json.players[i].cards[j].id);
+            }
+          }
+          if (json.players[i].chair == 3) {
+            $("#seat3").html(json.players[i].name)
+            $("#seat3").html(json.players[i].name)
+            for (var k = 0; k < 3; k++) {
+              $("#p3_card"+k).css('visibility', 'hidden')
+            }
+            for (var j = 0; j < json.players[i].cards.length; j++) {
+              $("#p3_card"+j).css('visibility', 'visible')
+              if (localStorage.getItem('playername') == json.players[i].name) {
+                $("#p3_card"+j).attr('src', json.players[i].cards[j].image);
+              } else {
+                $("#p3_card"+j).attr('src', '/assets/images/cards/back.png');
+              }
+              $("#p3_card"+j+"_val").val(json.players[i].cards[j].id);
+            }
+          }
+          if (json.players[i].chair == 4) {
+            $("#seat4").html(json.players[i].name)
+            for (var k = 0; k < 3; k++) {
+              $("#p4_card"+k).css('visibility', 'hidden')
+            }
+            for (var j = 0; j < json.players[i].cards.length; j++) {
+              $("#p4_card"+j).css('visibility', 'visible')
+              if (localStorage.getItem('playername') == json.players[i].name) {
+                $("#p4_card"+j).attr('src', json.players[i].cards[j].image);
+              } else {
+                $("#p4_card"+j).attr('src', '/assets/images/cards/back.png');
+              }
+              $("#p4_card"+j+"_val").val(json.players[i].cards[j].id);
+            }
+          }
+        }
+      }
+      console.log(json)
+    })
+    $('#myModal').on('show.bs.modal', function(){
+    });
+    $("#seat1").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        chair: 1,
+        token: localStorage.getItem('token')
+      }
+      socket.emit('sit', data)
+    })
+    $("#seat2").click(function() {
+      let player = {
+        id: parseInt(localStorage.getItem('room_id')),
+        chair: 2,
+        token: localStorage.getItem('token')
+      }
+      socket.emit('sit', player)
+    })
+    $("#seat3").click(function() {
+      let player = {
+        id: parseInt(localStorage.getItem('room_id')),
+        chair: 3,
+        token: localStorage.getItem('token')
+      }
+      socket.emit('sit', player)
+    })
+    $("#seat4").click(function() {
+      let player = {
+        id: parseInt(localStorage.getItem('room_id')),
+        chair: 4,
+        token: localStorage.getItem('token')
+      }
+      socket.emit('sit', player)
+    })
+    socket.on('chat', function(json){
+      $('#messages').append($('<li>').text(json.name+': '+json.message));
+    });
+    $("#chat").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        message: $('#chat_msg').val()
+      }
+      $('#chat_msg').val('')
+      socket.emit('chat', data)
+    })
+    $("#start").click(function() {
+      let player = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token')
+      }
+      socket.emit('start', player)
+    })
+    $("#exit").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        chair: 1,
+        token: localStorage.getItem('token')
+      }
+      let audio = new Audio('/assets/sounds/exit.ogg')
+      audio.play()
+      socket.emit('exit', data)
+      setTimeout(function() {
+        window.location = "/menu"
+      }, 2000)
+    })
+    $("#p1_card0").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p1_card0_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p1_card1").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p1_card1_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p1_card2").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p1_card2_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p4_card0").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p4_card0_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p4_card1").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p4_card1_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p4_card2").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p4_card2_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p2_card0").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p2_card0_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p2_card1").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p2_card1_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p2_card2").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p2_card2_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p3_card0").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p3_card0_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p3_card1").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p3_card1_val").val())
+      }
+      socket.emit('turn', data)
+    })
+    $("#p3_card2").click(function() {
+      let data = {
+        id: parseInt(localStorage.getItem('room_id')),
+        token: localStorage.getItem('token'),
+        card: parseInt($("#p3_card2_val").val())
+      }
+      socket.emit('turn', data)
+    })
+
+    var input = document.getElementById("chat_msg");
+    input.addEventListener("keyup", function(event) {
+      event.preventDefault();
+      if (event.keyCode === 13) {
+        document.getElementById("chat").click();
+      }
+    });
+  </script>
+</html>
